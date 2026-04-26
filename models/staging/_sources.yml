@@ -1,0 +1,28 @@
+sources:
+  - name: olist_raw
+    database: workspace
+    schema: "{{ target.schema }}_raw"
+    tables:
+      - name: olist_customers_dataset
+        description: "The table contains customer demographics. Possible use cases include segmenting customers for targeted marketing, geographical analysis of customer distribution, and generating insights into customer profiles."
+
+      - name: olist_order_items_dataset
+        description: "The table contains detailed information about items related to customer orders. Possible use cases include analyzing sales trends, evaluating shipping performance, and assessing product pricing strategies."
+
+      - name: olist_order_payments_dataset
+        description: "The table contains information about order payments made through the platform. This data can be used for financial analysis, tracking payment trends, and assessing customer payment behaviors."
+
+      - name: olist_order_reviews_dataset
+        description: "The table contains customer reviews for orders. This data can be used to analyze customer satisfaction, identify trends in product feedback, and assess the effectiveness of customer response strategies."
+
+      - name: olist_orders_dataset
+        description: "The table contains data related to customer orders. This data can be used to track order processing times, analyze customer purchasing patterns, and assess delivery performance."
+
+      - name: olist_products_dataset
+        description: "The table contains detailed information about various products offered in the inventory. Possible use cases include analyzing product characteristics for inventory management, understanding product design trends, and optimizing product listings based on descriptive data."
+
+      - name: olist_sellers_dataset
+        description: "The table contains all the information about sellers. This data can be used for analyzing seller distribution, understanding geographical trends, and evaluating performance by region."
+
+      - name: product_category_name_translation
+        description: "The table contains translations of product category names into English. It can be used for localization purposes, enabling the presentation of product categories in a way that is understandable to English-speaking users. This data can assist in translating product listings and improving user experience across various interfaces."
