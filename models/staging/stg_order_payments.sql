@@ -11,7 +11,7 @@ renamed as (
         payment_sequential,
         payment_type,
         payment_installments,
-        payment_value
+        payment_value as payment_value_in_BRL
 
     from source
 

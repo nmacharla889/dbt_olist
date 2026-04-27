@@ -29,3 +29,6 @@ models:
       +schema: marts
     snapshot:
       +schema: snapshot
+    intermediate:
+      +materialized: view
+      +schema: intermediate
