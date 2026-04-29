@@ -21,7 +21,6 @@ renamed as (
         business_type,
         declared_product_catalog_size,
         declared_monthly_revenue
-
     from source
 
 )
