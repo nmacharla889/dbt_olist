@@ -5,5 +5,6 @@ logs/
 dbt_internal_packages/
 dbt-env/
 profiles.yml
-seeds/*.csv
+seeds/sales/*.csv
+seeds/marketing/*.csv
 .user.yml
