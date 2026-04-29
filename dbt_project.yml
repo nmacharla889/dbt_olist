@@ -21,16 +21,27 @@ clean-targets:
 
 seeds:
   olist:
-    +schema: raw
+    sales:
+      +schema: sales_raw
+    marketing:
+      +schema: marketing_raw
 
 models:
   olist:
     staging:
-      +materialized: view
-      +schema: staging
+      sales:
+        +materialized: view
+        +schema: stg
+      marketing:
+        +materialized: view
+        +schema: mkt_stg
     marts:
-      +materialized: table
-      +schema: marts
+      sales:
+        +materialized: table
+        +schema: marts
+      marketing:
+        +materialized: table
+        +schema: mkt_marts
     snapshot:
       +schema: snapshot
     intermediate:

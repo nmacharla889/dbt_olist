@@ -1,12 +1,12 @@
 with orders as (
 
-    select * from {{ref('stg_orders')}}
+    select * from {{ref('stg_sales__orders')}}
 
 ),
 
 order_items as (
 
-    select * from {{ref('stg_order_items')}}
+    select * from {{ref('stg_sales__order_items')}}
 
 ),
 
@@ -21,7 +21,7 @@ payments as (
         max(case when payment_type = 'boleto'      then 1 else 0 end)  as paid_by_boleto,
         max(case when payment_type = 'voucher'     then 1 else 0 end)  as paid_by_voucher,
         max(case when payment_type = 'debit_card'  then 1 else 0 end)  as paid_by_debit_card
-    from {{ ref('stg_order_payments') }}
+    from {{ ref('stg_sales__order_payments') }}
     group by order_id
 
 ),
@@ -31,7 +31,7 @@ reviews as (
     select
         order_id,
         avg(review_score) as avg_review_score
-    from {{ ref('stg_order_reviews') }}
+    from {{ ref('stg_sales__order_reviews') }}
     group by order_id
 
 ),

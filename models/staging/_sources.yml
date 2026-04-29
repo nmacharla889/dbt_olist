@@ -1,7 +1,7 @@
 sources:
-  - name: olist_raw
+  - name: sales
     database: workspace
-    schema: "{{ target.schema }}_raw"
+    schema: "{{ target.schema }}_sales_raw"
     tables:
       - name: olist_customers_dataset
         description: "The table contains customer demographics. Possible use cases include segmenting customers for targeted marketing, geographical analysis of customer distribution, and generating insights into customer profiles."
@@ -26,3 +26,15 @@ sources:
 
       - name: product_category_name_translation
         description: "The table contains translations of product category names into English. It can be used for localization purposes, enabling the presentation of product categories in a way that is understandable to English-speaking users. This data can assist in translating product listings and improving user experience across various interfaces."
+
+      - name: olist_geolocation_dataset
+        description: "The table contains geolocation data related to zip codes. This data can be utilized for geospatial analysis, mapping customer distributions, and enhancing location-based services."
+
+  - name: marketing
+    database: workspace
+    schema: "{{ target.schema }}_marketing_raw"
+    tables:
+      - name: olist_closed_deals_dataset
+        description: "The table contains data on closed deals, capturing various attributes related to each deal, such as identifiers for the seller and different sales representatives, as well as the date the deal was won. This data can be utilized for performance analysis of sales teams, monitoring lead conversion, and understanding characteristics of successful deals."
+      - name: olist_marketing_qualified_leads_dataset
+        description: "The table contains data about marketing qualified leads, including information about their origin and the landing pages they interacted with. Possible use cases include tracking lead generation efforts, analyzing the effectiveness of different marketing campaigns, and identifying trends in lead engagement based on first contact dates."
