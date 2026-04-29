@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: stg_marketing__closed_deals
+    description: "The table contains data on closed deals within the marketing department. This data can be used to analyze sales performance, track deal closure timelines, and understand lead characteristics."
+    columns:
+      - name: mql_id
+        data_type: string
+        description: "Primary Key - Marketing Qualified Lead id"
+
+      - name: seller_id
+        data_type: string
+        description: "Foreign Key - Seller id from the sellers table"
+
+      - name: sales_rep_id
+        data_type: string
+        description: "Sales Development Representative id responsible for the lead"
+
+      - name: sales_manager_id
+        data_type: string
+        description: "Sales Representative Manager id responsible for the lead"
+
+      - name: deal_close_date
+        data_type: timestamp_ltz
+        description: "Date the deal was closed."
+
+      - name: business_segment
+        data_type: string
+        description: "Lead business segment informed on contact."
+
+      - name: lead_type
+        data_type: string
+        description: "Lead type informed on contact."
+
+      - name: lead_behaviour_profile
+        data_type: string
+        description: "Lead behaviour profile SDR identifies on contact."
+
+      - name: has_company
+        data_type: boolean
+        description: "Does the lead have a company (formal documentation)?"
+
+      - name: has_gtin
+        data_type: boolean
+        description: "Does the lead have a GTIN (Global Trade Item Number) (barcode) for his products?"
+
+      - name: average_stock
+        data_type: string
+        description: "Lead declared average stock informed on contact."
+
+      - name: business_type
+        data_type: string
+        description: "Lead business type informed on contact."
+
+      - name: declared_product_catalog_size
+        data_type: bigint
+        description: "Lead declared product catalog size informed on contact."
+
+      - name: declared_monthly_revenue
+        data_type: bigint
+        description: "Lead declared monthly revenue informed on contact."

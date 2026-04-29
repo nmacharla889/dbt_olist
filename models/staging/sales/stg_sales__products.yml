@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_sales__products
+    description: "The table contains detailed information about products available for sale, which can be used for inventory analysis, optimizing product listings, and improving customer experience by understanding product presentation."
+    columns:
+      - name: product_id
+        data_type: string
+        description: "Primary key that uniquely identifies each product in the sales dataset."
+
+      - name: product_category_name
+        data_type: string
+        description: "Name of the category to which the product belongs in Portuguese."
+
+      - name: product_name_length
+        data_type: bigint
+        description: "Number of characters extracted from the product name.."
+
+      - name: product_description_length
+        data_type: bigint
+        description: "Number of characters extracted from the product description."
+
+      - name: product_photos_qty
+        data_type: bigint
+        description: "Number of photos associated with the product."
+
+      - name: product_weight
+        data_type: bigint
+        description: "Weight of the product in grams."
+
+      - name: product_length
+        data_type: bigint
+        description: "Length of the product in centimeters."
+
+      - name: product_height
+        data_type: bigint
+        description: "Height of the product in centimeters."
+
+      - name: product_width
+        data_type: bigint
+        description: "Width of the product in centimeters."

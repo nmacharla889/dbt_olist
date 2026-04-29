@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: dim_sellers
+    description: "The table contains information about sellers within the Olist platform. This data can be used to analyze seller distributions, assess regional performance, and support geolocation-based marketing strategies."
+    columns:
+      - name: seller_key
+        data_type: string
+        description: "Surrogate primary key generated via dbt_utils.generate_surrogate_key"
+
+      - name: seller_id
+        data_type: string
+        description: "Unique identifier for each seller within the Olist platform."
+
+      - name: zip_code
+        data_type: bigint
+        description: "The postal code of the seller's location."
+
+      - name: seller_city
+        data_type: string
+        description: "The city where the seller is located."
+
+      - name: seller_state
+        data_type: string
+        description: "The state where the seller is located."

@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_marketing__marketing_qualified_leads
+    description: "The table contains data on marketing qualified leads (MQLs), which are leads that have met certain criteria indicating their potential for becoming customers. This data can be useful for analyzing lead generation effectiveness, tracking the performance of marketing campaigns, and understanding the source of qualified leads."
+    columns:
+      - name: mql_id
+        data_type: string
+        description: "Primary Key -Marketing Qualified Lead id"
+
+      - name: lead_original_date
+        data_type: date
+        description: "Date of the first contact solicitation."
+
+      - name: lead_source_id
+        data_type: string
+        description: "Landing page id where the lead was acquired"
+
+      - name: lead_source
+        data_type: string
+        description: "Type of media where the lead was acquired (e.g., Facebook, Google, etc.)"

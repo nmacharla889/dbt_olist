@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_sales__geolocation
+    description: "The table contains geolocation data linked to sales. This data can be utilized for analyzing sales patterns in relation to geographic regions, understanding market demographics, and improving targeted marketing strategies based on location."
+    columns:
+      - name: zip_code
+        data_type: bigint
+        description: "Zip code associated with the geolocation data. This field can be used to link sales data to specific geographic areas, enabling analysis of sales trends and customer behavior based on location."
+
+      - name: geolocation_lat
+        data_type: double
+        description: "Latitude coordinate of the geolocation."
+
+      - name: geolocation_lng
+        data_type: double
+        description: "Longitude coordinate of the geolocation."
+
+      - name: geolocation_city
+        data_type: string
+        description: "City associated with the geolocation."
+
+      - name: geolocation_state
+        data_type: string
+        description: "State associated with the geolocation."

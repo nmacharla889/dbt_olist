@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: fct_marketing_funnel
+    description: "The table contains enriched order information for analysis related to customer purchases. Possible use cases include analyzing order fulfillment efficiency, understanding customer purchase behavior, and evaluating product and seller performance. Grain: one row per marketing qualified lead (MQL).Tracks the full funnel from first contact to closed deal. Deals that did not convert will have null values for closed deal columns."
+    columns:
+      - name: marketing_funnel_key
+        data_type: string
+        description: "Surrogate primary key — hash of mql_id."
+
+      - name: seller_key
+        data_type: string
+        description: "Surrogate key for the seller."
+
+      - name: first_contact_date_key
+        data_type: int
+        description: "Foreign key to dim_dates based on first contact date."
+
+      - name: deal_close_date_key
+        data_type: int
+        description: "Foreign key to dim_dates based on deal close date."
+
+      - name: lead_date_key
+        data_type: int
+        description: "Foreign key to dim_dates based on lead date."
+
+      - name: deal_closed_date_key
+        data_type: int
+        description: "Foreign key to dim_dates based on deal closed date."
+
+      - name: mql_id
+        data_type: string
+        description: "Foreign key Marketing Qualified Lead"
+
+      - name: lead_source
+        data_type: string
+        description: "The source from which the lead was acquired."
+
+      - name: sales_rep_id
+        data_type: string
+        description: "Foreign key to the sales representative responsible for the lead."
+
+      - name: sales_manager_id
+        data_type: string
+        description: "Foreign key to the sales manager responsible for the lead."
+
+      - name: business_segment
+        data_type: string
+        description: "The business segment to which the lead belongs."
+
+      - name: lead_type
+        data_type: string
+        description: "The type of the lead."
+
+      - name: lead_behaviour_profile
+        data_type: string
+        description: "The behavioural profile of the lead."
+
+      - name: has_company
+        data_type: boolean
+        description: "Indicator of whether the lead has a company."
+
+      - name: has_gtin
+        data_type: boolean
+        description: "Indicator of whether the lead has a GTIN."
+
+      - name: average_stock
+        data_type: string
+        description: "The average stock level for the lead."
+
+      - name: business_type
+        data_type: string
+        description: "The type of business for the lead."
+
+      - name: declared_product_catalog_size
+        data_type: bigint
+        description: "The size of the declared product catalog."
+
+      - name: declared_monthly_revenue
+        data_type: bigint
+        description: "The declared monthly revenue."
+
+      - name: is_deal_closed
+        data_type: boolean
+        description: "Indicator of whether the deal is closed."
+
+      - name: days_to_close_deal
+        data_type: bigint
+        description: "The number of days it took to close the deal. Null if the deal is not closed. Calculated as the difference between deal_closed_date and first_contact_date."

@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_sales__order_items
+    description: "The table contains detailed information about order items in the sales process. Use cases include analyzing sales trends, calculating shipping costs, and monitoring seller performance."
+    columns:
+      - name: order_id
+        data_type: string
+        description: "Order unique identifier"
+
+      - name: item_id
+        data_type: bigint
+        description: "Sequential number identifying number of items included in the same order."
+
+      - name: product_id
+        data_type: string
+        description: "Unique identifier for the product associated with the item"
+
+      - name: seller_id
+        data_type: string
+        description: "Unique identifier for the seller of the item"
+
+      - name: shipping_limit_date
+        data_type: date
+        description: "Date by which the item must be shipped to meet the delivery deadline to the logistic partner"
+
+      - name: item_price_in_brl
+        data_type: double
+        description: "Price of the item in Brazilian Reais (BRL)"
+
+      - name: item_freight_value_in_brl
+        data_type: double
+        description: "Item freight value item (if an order has more than one item the freight value is splitted between items)"

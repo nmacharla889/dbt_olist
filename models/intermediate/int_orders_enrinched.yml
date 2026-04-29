@@ -1,0 +1,97 @@
+version: 2
+
+models:
+  - name: int_orders_enriched
+    description: ""
+    columns:
+      - name: order_id
+        data_type: string
+        description: ""
+
+      - name: item_id
+        data_type: bigint
+        description: ""
+
+      - name: customer_id
+        data_type: string
+        description: ""
+
+      - name: product_id
+        data_type: string
+        description: ""
+
+      - name: seller_id
+        data_type: string
+        description: ""
+
+      - name: order_status
+        data_type: string
+        description: ""
+
+      - name: order_purchase_date
+        data_type: date
+        description: ""
+
+      - name: order_approved_date
+        data_type: date
+        description: ""
+
+      - name: order_delivered_carrier_date
+        data_type: date
+        description: ""
+
+      - name: order_delivered_customer_date
+        data_type: date
+        description: ""
+
+      - name: order_estimated_delivery_date
+        data_type: date
+        description: ""
+
+      - name: delivery_delay_days
+        data_type: int
+        description: ""
+
+      - name: item_price_in_brl
+        data_type: double
+        description: ""
+
+      - name: item_freight_value_in_brl
+        data_type: double
+        description: ""
+
+      - name: total_item_value_in_brl
+        data_type: double
+        description: ""
+
+      - name: total_payment_value_in_brl
+        data_type: double
+        description: ""
+
+      - name: max_payment_installments
+        data_type: bigint
+        description: ""
+
+      - name: payment_method_count
+        data_type: bigint
+        description: ""
+
+      - name: paid_by_credit_card
+        data_type: int
+        description: ""
+
+      - name: paid_by_boleto
+        data_type: int
+        description: ""
+
+      - name: paid_by_voucher
+        data_type: int
+        description: ""
+
+      - name: paid_by_debit_card
+        data_type: int
+        description: ""
+
+      - name: avg_review_score
+        data_type: double
+        description: ""

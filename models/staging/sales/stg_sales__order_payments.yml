@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_sales__order_payments
+    description: "The table contains data related to order payments within the sales environment. Possible use cases include analyzing payment trends, understanding customer payment preferences, and evaluating financial metrics related to order fulfillment."
+    columns:
+      - name: order_id
+        data_type: string
+        description: "Key to the orders dataset. Each payment is associated with a unique order."
+
+      - name: payment_sequential
+        data_type: bigint
+        description: "A customer may pay an order with more than one payment method. If they does so, a sequence will be created to accommodate all payments."
+
+      - name: payment_type
+        data_type: string
+        description: "Type of payment method used (e.g., credit card, debit card, boleto)."
+
+      - name: payment_installments
+        data_type: bigint
+        description: "Number of installments for the payment."
+
+      - name: payment_value_in_brl
+        data_type: double
+        description: "Value of the payment in Brazilian Reais (BRL)."

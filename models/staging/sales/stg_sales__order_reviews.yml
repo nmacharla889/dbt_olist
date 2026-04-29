@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_sales__order_reviews
+    description: "The table contains information related to customer reviews for orders. Possible use cases include analyzing customer satisfaction, identifying trends in product feedback, and assessing the effectiveness of response times to reviews."
+    columns:
+      - name: review_id
+        data_type: string
+        description: "Primary key for the order review, uniquely identifying each review entry."
+
+      - name: order_id
+        data_type: string
+        description: "Key to the orders dataset. Each review is associated with a unique order."
+
+      - name: review_score
+        data_type: bigint
+        description: "Score assigned by the customer for the order (e.g., 1 to 5)."
+
+      - name: review_title
+        data_type: string
+        description: "Title or headline of the customer review in Portuguese."
+
+      - name: review_message
+        data_type: string
+        description: "Detailed message or content of the customer review in Portuguese."
+
+      - name: review_date
+        data_type: date
+        description: "Date when the review was submitted."
+
+      - name: review_answer_date
+        data_type: date
+        description: "Date when the seller responded to the review."

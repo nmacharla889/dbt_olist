@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: stg_sales__product_category_name_translation
+    description: "This table contains translations of product category names. Potential use cases include ensuring consistent terminology across different languages in reporting and analytics, supporting localization efforts, and enhancing communication within the product management and sales teams."
+    columns:
+      - name: product_category_name
+        data_type: string
+        description: "category name in Portuguese"
+
+      - name: product_category_name_english
+        data_type: string
+        description: "category name in English"

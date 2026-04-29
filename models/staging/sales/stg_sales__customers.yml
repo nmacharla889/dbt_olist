@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: stg_sales__customers
+    description: "The table contains information about customers. This data can be useful for analyzing customer demographics, segmenting markets, and targeting specific regions in sales efforts."
+    columns:
+      - name: customer_id
+        data_type: string
+        description: "key to the orders dataset. Each order has a unique customer_id."
+
+      - name: customer_unique_id
+        data_type: string
+        description: "Unique identifier of a customer."
+
+      - name: zip_code
+        data_type: bigint
+        description: "Zip code of the customer's address."
+
+      - name: customer_city
+        data_type: string
+        description: "City of the customer's address."
+
+      - name: customer_state
+        data_type: string
+        description: "State of the customer's address."

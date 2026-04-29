@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: dim_products
+    description: "The table contains detailed information about products. Potential use cases include analyzing product characteristics, categorizing products by dimensions or weight, and understanding the impact of product aesthetics such as photo quantity. This data can support inventory management, sales analysis, and product development initiatives."
+    columns:
+      - name: product_key
+        data_type: string
+        description: "Surrogate primary key generated via dbt_utils.generate_surrogate_key"
+
+      - name: product_id
+        data_type: string
+        description: "Unique identifier for each product"
+
+      - name: product_category_name
+        data_type: string
+        description: "The category to which the product belongs"
+
+      - name: product_name_length
+        data_type: bigint
+        description: "The length of the product name"
+
+      - name: product_description_length
+        data_type: bigint
+        description: "The length of the product description"
+
+      - name: product_photos_qty
+        data_type: bigint
+        description: "The quantity of photos associated with the product"
+
+      - name: product_weight
+        data_type: bigint
+        description: "The weight of the product"
+
+      - name: product_length
+        data_type: bigint
+        description: "The length of the product"
+
+      - name: product_height
+        data_type: bigint
+        description: "The height of the product"
+
+      - name: product_width
+        data_type: bigint
+        description: "The width of the product"

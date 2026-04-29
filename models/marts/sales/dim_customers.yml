@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "The table data can be used for customer segmentation, analyzing demographics, and targeting marketing efforts based on geographic areas."
+    columns:
+      - name: customer_key
+        data_type: string
+        description: "Surrogate primary key generated via dbt_utils.generate_surrogate_key"
+
+      - name: customer_unique_id
+        data_type: string
+        description: "True unique customer identifier across all orders."
+
+      - name: zip_code
+        data_type: bigint
+        description: "Zip code associated with the customer's location"
+
+      - name: customer_city
+        data_type: string
+        description: "City associated with the customer's location"
+
+      - name: customer_state
+        data_type: string
+        description: "State associated with the customer's location"

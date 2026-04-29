@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_sales__sellers
+    description: "The table contains information about sellers. Use cases include analyzing seller distribution by region, assessing performance across different locations, and understanding market coverage."
+    columns:
+      - name: seller_id
+        data_type: string
+        description: "Primary key — unique identifier of a seller."
+
+      - name: zip_code
+        data_type: bigint
+        description: "Zip code of the seller's address. "
+
+      - name: seller_city
+        data_type: string
+        description: "City of the seller's address."
+
+      - name: seller_state
+        data_type: string
+        description: "State of the seller's address."

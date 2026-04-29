@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_sales__orders
+    description: "The table contains information on customer orders. Possible use cases include tracking order fulfillment processes, analyzing delivery timelines, and improving customer service by identifying delays in order delivery."
+    columns:
+      - name: order_id
+        data_type: string
+        description: "Primary key for the orders table, uniquely identifying each order."
+
+      - name: customer_id
+        data_type: string
+        description: "Key to the customers dataset. Each order is associated with a unique customer."
+
+      - name: order_status
+        data_type: string
+        description: "Status of the order (e.g., delivered, shipped, canceled)."
+
+      - name: order_purchase_date
+        data_type: date
+        description: "Date when the order was purchased."
+
+      - name: order_approved_date
+        data_type: date
+        description: "Date when the order was approved."    
+
+      - name: order_delivered_carrier_date
+        data_type: date
+        description: "Date when the order was delivered by the carrier."
+
+      - name: order_delivered_customer_date
+        data_type: date
+        description: "Date when the order was delivered to the customer."
+
+      - name: order_estimated_delivery_date
+        data_type: date
+        description: "Estimated date for order delivery."
