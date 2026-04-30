@@ -7,10 +7,16 @@ models:
       - name: customer_key
         data_type: string
         description: "Surrogate primary key generated via dbt_utils.generate_surrogate_key"
+        tests:
+          - unique
+          - not_null
 
       - name: customer_unique_id
         data_type: string
         description: "True unique customer identifier across all orders."
+        tests:
+          - unique
+          - not_null
 
       - name: zip_code
         data_type: bigint

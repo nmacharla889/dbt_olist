@@ -1,6 +1,6 @@
 with source as (
 
-    select * from {{ source('sales', 'olist_order_reviews_dataset') }}
+    select * from {{ source('sales', 'olist_order_reviews_dataset') }} qualify row_number() over (partition by review_id order by review_answer_timestamp desc) = 1
 
 ),
 

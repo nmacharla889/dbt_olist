@@ -7,10 +7,16 @@ models:
       - name: product_key
         data_type: string
         description: "Surrogate primary key generated via dbt_utils.generate_surrogate_key"
+        tests:
+          - not_null
+          - unique
 
       - name: product_id
         data_type: string
         description: "Unique identifier for each product"
+        tests:
+          - not_null
+          - unique
 
       - name: product_category_name
         data_type: string

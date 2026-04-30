@@ -7,14 +7,21 @@ models:
       - name: mql_id
         data_type: string
         description: "Primary Key -Marketing Qualified Lead id"
+        tests:
+          - unique
+          - not_null
 
       - name: lead_original_date
         data_type: date
         description: "Date of the first contact solicitation."
+        tests:
+          - not_null
 
       - name: lead_source_id
         data_type: string
         description: "Landing page id where the lead was acquired"
+        tests:
+          - not_null
 
       - name: lead_source
         data_type: string

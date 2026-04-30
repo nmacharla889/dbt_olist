@@ -7,10 +7,16 @@ models:
       - name: seller_key
         data_type: string
         description: "Surrogate primary key generated via dbt_utils.generate_surrogate_key"
+        tests:
+          - unique
+          - not_null
 
       - name: seller_id
         data_type: string
         description: "Unique identifier for each seller within the Olist platform."
+        tests:
+          - unique
+          - not_null
 
       - name: zip_code
         data_type: bigint

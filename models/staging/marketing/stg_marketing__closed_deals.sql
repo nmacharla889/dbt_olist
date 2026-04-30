@@ -11,7 +11,7 @@ renamed as (
         seller_id,
         sdr_id as sales_rep_id,
         sr_id as sales_manager_id,
-        won_date as deal_close_date,
+        date(convert_timezone('America/Sao_Paulo', 'UTC', won_date)) as deal_close_date,
         business_segment,
         lead_type,
         lead_behaviour_profile,
@@ -20,7 +20,7 @@ renamed as (
         average_stock,
         business_type,
         declared_product_catalog_size,
-        declared_monthly_revenue
+        cast(round(declared_monthly_revenue, 2) as decimal(10, 2)) as declared_monthly_revenue
     from source
 
 )

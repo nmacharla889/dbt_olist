@@ -7,15 +7,20 @@ models:
       - name: review_id
         data_type: string
         description: "Primary key for the order review, uniquely identifying each review entry."
+        tests:
+          - not_null
+          - unique
 
       - name: order_id
         data_type: string
         description: "Key to the orders dataset. Each review is associated with a unique order."
+        tests:
+          - not_null
 
       - name: review_score
         data_type: bigint
         description: "Score assigned by the customer for the order (e.g., 1 to 5)."
-
+          
       - name: review_title
         data_type: string
         description: "Title or headline of the customer review in Portuguese."

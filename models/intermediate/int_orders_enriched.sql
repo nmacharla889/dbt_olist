@@ -14,7 +14,7 @@ payments as (
 
     select
         order_id,
-        sum(payment_value_in_BRL) as total_payment_value_in_BRL,
+        cast(round(sum(payment_value_in_BRL), 2) as decimal(10, 2)) as total_payment_value_in_BRL,
         max(payment_installments)   as max_payment_installments,
         count(distinct payment_type) as payment_method_count,
         max(case when payment_type = 'credit_card' then 1 else 0 end)  as paid_by_credit_card,
@@ -53,8 +53,8 @@ final as (
         date_diff(o.order_delivered_customer_date, o.order_estimated_delivery_date) as delivery_delay_days,
         oi.item_price_in_BRL,
         oi.item_freight_value_in_BRL,
-        oi.item_price_in_BRL + oi.item_freight_value_in_BRL as total_item_value_in_BRL,
-        p.total_payment_value_in_BRL,
+        cast(round(oi.item_price_in_BRL + oi.item_freight_value_in_BRL, 2) as decimal(10, 2)) as total_item_value_in_BRL,
+        coalesce(p.total_payment_value_in_BRL, 0) as total_payment_value_in_BRL,
         p.max_payment_installments,
         p.payment_method_count,
         p.paid_by_credit_card,

@@ -7,18 +7,29 @@ models:
       - name: order_id
         data_type: string
         description: "Primary key for the orders table, uniquely identifying each order."
+        tests:
+          - unique
+          - not_null
 
       - name: customer_id
         data_type: string
         description: "Key to the customers dataset. Each order is associated with a unique customer."
+        tests:
+          - not_null
 
       - name: order_status
         data_type: string
         description: "Status of the order (e.g., delivered, shipped, canceled)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['created', 'paid', 'shipped', 'delivered', 'canceled', 'unavailable', 'invoiced', 'processing', 'approved']
 
       - name: order_purchase_date
         data_type: date
         description: "Date when the order was purchased."
+        tests:
+          - not_null
 
       - name: order_approved_date
         data_type: date
@@ -35,3 +46,5 @@ models:
       - name: order_estimated_delivery_date
         data_type: date
         description: "Estimated date for order delivery."
+        tests:
+          - not_null

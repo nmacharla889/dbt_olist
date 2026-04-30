@@ -7,19 +7,31 @@ models:
       - name: order_id
         data_type: string
         description: "Key to the orders dataset. Each payment is associated with a unique order."
+        tests:
+          - not_null
 
       - name: payment_sequential
         data_type: bigint
         description: "A customer may pay an order with more than one payment method. If they does so, a sequence will be created to accommodate all payments."
+        tests:
+          - not_null
 
       - name: payment_type
         data_type: string
         description: "Type of payment method used (e.g., credit card, debit card, boleto)."
+        tests:
+          - not_null
+          - accepted_values: 
+              values: ['credit_card', 'boleto', 'voucher', 'debit_card', 'not_defined']
 
       - name: payment_installments
         data_type: bigint
         description: "Number of installments for the payment."
+        tests:
+          - not_null
 
       - name: payment_value_in_brl
         data_type: double
         description: "Value of the payment in Brazilian Reais (BRL)."
+        tests:
+          - not_null

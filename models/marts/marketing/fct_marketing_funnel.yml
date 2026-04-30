@@ -7,30 +7,37 @@ models:
       - name: marketing_funnel_key
         data_type: string
         description: "Surrogate primary key — hash of mql_id."
+        tests:
+          - unique
+          - not_null
 
       - name: seller_key
         data_type: string
         description: "Surrogate key for the seller."
+        # intentionally nullable — only populated when mql converts to a closed deal
 
       - name: first_contact_date_key
         data_type: int
         description: "Foreign key to dim_dates based on first contact date."
+        tests:
+          - not_null
 
       - name: deal_close_date_key
         data_type: int
         description: "Foreign key to dim_dates based on deal close date."
+        # intentionally not testing not_null since many leads won't convert to deals
 
       - name: lead_date_key
         data_type: int
         description: "Foreign key to dim_dates based on lead date."
-
-      - name: deal_closed_date_key
-        data_type: int
-        description: "Foreign key to dim_dates based on deal closed date."
+        tests:
+          - not_null
 
       - name: mql_id
         data_type: string
         description: "Foreign key Marketing Qualified Lead"
+        tests:
+          - not_null
 
       - name: lead_source
         data_type: string

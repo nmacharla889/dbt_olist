@@ -7,6 +7,9 @@ models:
       - name: product_id
         data_type: string
         description: "Primary key that uniquely identifies each product in the sales dataset."
+        tests:
+          - not_null
+          - unique
 
       - name: product_category_name
         data_type: string

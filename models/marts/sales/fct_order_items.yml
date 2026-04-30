@@ -7,6 +7,9 @@ models:
       - name: order_item_key
         data_type: string
         description: "Surrogate primary key generated via dbt_utils.generate_surrogate_key hashed on order_id and item_id"
+        tests:
+          - unique
+          - not_null
 
       - name: product_key
         data_type: string
@@ -15,30 +18,44 @@ models:
       - name: seller_key
         data_type: string
         description: "Foreign key to dim_sellers"
+        tests:
+          - not_null
 
       - name: customer_key
         data_type: string
         description: "Foreign key to dim_customers"
+        tests:
+          - not_null
 
       - name: order_purchase_date_key
         data_type: int
         description: "Foreign key to dim_dates based on order_purchase_date"
+        tests:
+          - not_null
 
       - name: order_id
         data_type: string
         description: "Unique identifier for each order, shared across all items in the same order."
+        tests:
+          - not_null
 
       - name: item_id
         data_type: bigint
         description: "Unique identifier for each item within an order. For example, if an order has three items, they will have item_id values of 1, 2, and 3."
+        tests:
+          - not_null
 
       - name: order_status
         data_type: string
         description: "The status of the order (e.g., shipped, delivered)."
+        tests:
+          - not_null
 
       - name: order_purchase_date
         data_type: date
         description: "The date when the order was purchased."
+        tests:
+          - not_null
 
       - name: order_approved_date
         data_type: date
@@ -55,6 +72,8 @@ models:
       - name: order_estimated_delivery_date
         data_type: date
         description: "The date when the order is estimated to be delivered. This can be used to analyze the accuracy of delivery estimates and to calculate delivery delays."
+        tests:
+          - not_null
 
       - name: delivery_delay_days
         data_type: int
@@ -63,18 +82,26 @@ models:
       - name: item_price_in_brl
         data_type: double
         description: "The price of the item in Brazilian Real (BRL). This is the amount paid by the customer for this specific item, excluding any discounts or promotions."
+        tests:
+          - not_null
 
       - name: item_freight_value_in_brl
         data_type: double
         description: "The freight value of the item in Brazilian Real (BRL). This is the cost associated with shipping the item to the customer."
+        tests:
+          - not_null
         
       - name: total_item_value_in_brl
         data_type: double
         description: "The total value of the item in Brazilian Real (BRL), including price and freight."
+        tests:
+          - not_null
 
       - name: total_payment_value_in_brl
         data_type: double
         description: "The total value of the payment in Brazilian Real (BRL)."
+        tests:
+          - not_null
 
       - name: max_payment_installments
         data_type: bigint
@@ -102,4 +129,4 @@ models:
 
       - name: avg_review_score
         data_type: double
-        description: ""
+        description: "Average review score for the item, calculated as the average of all review scores given by customers for this item. This can be used to analyze customer satisfaction and product quality."

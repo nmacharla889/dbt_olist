@@ -7,18 +7,26 @@ models:
       - name: order_id
         data_type: string
         description: "Order unique identifier"
+        tests:
+          - not_null
 
       - name: item_id
         data_type: bigint
         description: "Sequential number identifying number of items included in the same order."
+        tests:
+          - not_null
 
       - name: product_id
         data_type: string
         description: "Unique identifier for the product associated with the item"
+        tests:
+          - not_null
 
       - name: seller_id
         data_type: string
         description: "Unique identifier for the seller of the item"
+        tests:
+          - not_null
 
       - name: shipping_limit_date
         data_type: date
@@ -27,6 +35,8 @@ models:
       - name: item_price_in_brl
         data_type: double
         description: "Price of the item in Brazilian Reais (BRL)"
+        tests:
+          - not_null
 
       - name: item_freight_value_in_brl
         data_type: double

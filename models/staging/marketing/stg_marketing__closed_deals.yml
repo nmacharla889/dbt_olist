@@ -7,10 +7,14 @@ models:
       - name: mql_id
         data_type: string
         description: "Primary Key - Marketing Qualified Lead id"
+        tests:
+          - not_null
 
       - name: seller_id
         data_type: string
         description: "Foreign Key - Seller id from the sellers table"
+        tests:
+          - not_null
 
       - name: sales_rep_id
         data_type: string

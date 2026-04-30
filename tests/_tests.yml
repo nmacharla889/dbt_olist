@@ -1,0 +1,32 @@
+version: 2
+
+tests:
+  - name: assert_total_item_value_matches_components
+    description: >
+      Total item value must equal item price plus freight value.
+      Failure means a broken calculation in int_orders_enriched.
+
+  - name: assert_delivered_orders_have_delivery_date
+    description: >
+      Any order with status 'delivered' must have a delivery date.
+      Failure indicates bad source data or broken staging logic.
+
+  - name: assert_purchase_before_estimated_delivery
+    description: >
+      Purchase timestamp must be before estimated delivery date.
+      Failure indicates corrupted timestamps in source data.
+
+  - name: assert_fct_order_items_price_positive
+    description: >
+      No order item should have a zero or negative price.
+      Tested at staging layer where price originates.
+
+  - name: assert_marketing_funnel_no_orphan_sellers
+    description: >
+      Every seller in fct_marketing_funnel must exist in dim_sellers.
+      Orphans cause silent row drops on funnel-to-sales joins.
+
+  - name: assert_avg_review_score_in_range
+    description: >
+      Average review score must be between 1 and 5.
+      Null scores are allowed — they indicate orders with no reviews.

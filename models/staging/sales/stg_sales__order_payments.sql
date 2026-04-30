@@ -11,7 +11,7 @@ renamed as (
         payment_sequential,
         payment_type,
         payment_installments,
-        payment_value as payment_value_in_BRL
+        cast(round(payment_value, 2) as decimal(10, 2)) as payment_value_in_BRL
 
     from source
 

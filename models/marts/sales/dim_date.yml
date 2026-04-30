@@ -7,6 +7,9 @@ models:
       - name: date_day
         data_type: date
         description: "The actual date value"
+        tests:
+          - not_null
+          - unique
 
       - name: date_key
         data_type: int
