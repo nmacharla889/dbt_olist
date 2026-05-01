@@ -17,6 +17,9 @@ models:
         tests:
           - unique
           - not_null
+          - relationships:
+              to: ref('stg_sales__customers')
+              field: customer_unique_id
 
       - name: zip_code
         data_type: bigint

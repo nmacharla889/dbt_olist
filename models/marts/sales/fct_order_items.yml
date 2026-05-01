@@ -14,36 +14,55 @@ models:
       - name: product_key
         data_type: string
         description: "Foreign key to dim_products"
+        tests:
+          - relationships:
+              to: ref('dim_products')
+              field: product_key
 
       - name: seller_key
         data_type: string
         description: "Foreign key to dim_sellers"
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_sellers')
+              field: seller_key
 
       - name: customer_key
         data_type: string
         description: "Foreign key to dim_customers"
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_key
 
       - name: order_purchase_date_key
         data_type: int
         description: "Foreign key to dim_dates based on order_purchase_date"
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: date_key
 
       - name: order_id
         data_type: string
         description: "Unique identifier for each order, shared across all items in the same order."
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_sales__orders')
+              field: order_id
 
       - name: item_id
         data_type: bigint
         description: "Unique identifier for each item within an order. For example, if an order has three items, they will have item_id values of 1, 2, and 3."
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_sales__order_items')
+              field: item_id
 
       - name: order_status
         data_type: string

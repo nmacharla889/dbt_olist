@@ -14,6 +14,10 @@ models:
       - name: seller_key
         data_type: string
         description: "Surrogate key for the seller."
+        tests:
+          - relationships:
+              to: ref('dim_sellers')
+              field: seller_key
         # intentionally nullable — only populated when mql converts to a closed deal
 
       - name: first_contact_date_key
@@ -21,10 +25,17 @@ models:
         description: "Foreign key to dim_dates based on first contact date."
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: date_key
 
       - name: deal_close_date_key
         data_type: int
         description: "Foreign key to dim_dates based on deal close date."
+        tests:
+          - relationships:
+              to: ref('dim_dates')
+              field: date_key
         # intentionally not testing not_null since many leads won't convert to deals
 
       - name: lead_date_key
@@ -32,12 +43,18 @@ models:
         description: "Foreign key to dim_dates based on lead date."
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: date_key
 
       - name: mql_id
         data_type: string
         description: "Foreign key Marketing Qualified Lead"
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_marketing_funnel')
+              field: mql_id
 
       - name: lead_source
         data_type: string

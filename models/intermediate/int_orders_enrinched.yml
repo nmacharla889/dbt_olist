@@ -2,41 +2,56 @@ version: 2
 
 models:
   - name: int_orders_enriched
-    description: ""
+    description: "Enriched orders data with information from customers, products, sellers and payments."
     columns:
       - name: order_id
         data_type: string
-        description: ""
+        description: "Unique identifier for each order"
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_sales__orders')
+              field: order_id
 
       - name: item_id
         data_type: bigint
-        description: ""
+        description: "Unique identifier for each order item"
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_sales__order_items')
+              field: item_id
 
       - name: customer_id
         data_type: string
-        description: ""
+        description: "Every order gets a customer_id, but customer_unique_id uniquely identifies each customer. This means that a single customer can have multiple customer_id values if they place multiple orders."
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_sales__customers')
+              field: customer_id
 
       - name: product_id
         data_type: string
-        description: ""
+        description: "Unique identifier for each product"
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_sales__products')
+              field: product_id
 
       - name: seller_id
         data_type: string
-        description: ""
+        description: "Unique identifier for each seller"
         tests:
           - not_null
+          - relationships:
+              to: ref('stg_sales__sellers')
+              field: seller_id
 
       - name: order_status
         data_type: string
-        description: ""
+        description: "Status of the order"
         tests:
           - not_null
           - accepted_values:
@@ -44,80 +59,80 @@ models:
 
       - name: order_purchase_date
         data_type: date
-        description: ""
+        description: "Date when the order was purchased"
         tests:
           - not_null
 
       - name: order_approved_date
         data_type: date
-        description: ""
+        description: "Date when the order was approved"
 
       - name: order_delivered_carrier_date
         data_type: date
-        description: ""
+        description: "Date when the order was delivered to the carrier"
 
       - name: order_delivered_customer_date
         data_type: date
-        description: ""
+        description: "Date when the order was delivered to the customer"
 
       - name: order_estimated_delivery_date
         data_type: date
-        description: ""
+        description: "Estimated delivery date for the order"
         tests:
           - not_null
 
       - name: delivery_delay_days
         data_type: int
-        description: ""
+        description: "Number of days the order was delayed in delivery"
 
       - name: item_price_in_brl
         data_type: double
-        description: ""
+        description: "Price of the item in BRL"
         tests:
           - not_null
 
       - name: item_freight_value_in_brl
         data_type: double
-        description: ""
+        description: "Freight value of the item in BRL"
         tests:
           - not_null
 
       - name: total_item_value_in_brl
         data_type: double
-        description: ""
+        description: "Total value of the item in BRL"
         tests:
           - not_null
 
       - name: total_payment_value_in_brl
         data_type: double
-        description: ""
+        description: "Total value of the payment in BRL"
         tests:
           - not_null
 
       - name: max_payment_installments
         data_type: bigint
-        description: ""
+        description: "Maximum number of installments for the payment"
 
       - name: payment_method_count
         data_type: bigint
-        description: ""
+        description: "Number of different payment methods used for the order"
 
       - name: paid_by_credit_card
         data_type: int
-        description: ""
+        description: "Number of payments made by credit card for the order`"
 
       - name: paid_by_boleto
         data_type: int
-        description: ""
+        description: "Number of payments made by boleto for the order"
 
       - name: paid_by_voucher
         data_type: int
-        description: ""
+        description: "Number of payments made by voucher for the order"
 
       - name: paid_by_debit_card
         data_type: int
-        description: ""
+        description: "Number of payments made by debit card for the order"
 
       - name: avg_review_score
         data_type: double
-        description: ""
+        description: "Average review score for the order"

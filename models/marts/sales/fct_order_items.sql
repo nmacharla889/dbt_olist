@@ -1,6 +1,14 @@
+{{config(
+    materialized='incremental',
+    unique_key='order_item_key',
+    incremental_strategy='merge'
+)}}
+
+
 with orders_enriched as (
 
     select * from {{ ref('int_orders_enriched') }}
+    {{incremental_filter ('order_purchase_date')}}
 
 ),
 
