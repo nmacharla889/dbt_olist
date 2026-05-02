@@ -33,7 +33,7 @@ jobs:
                 http_path: ${{ secrets.DATABRICKS_HTTP_PATH }}
                 token: ${{ secrets.DATABRICKS_TOKEN }}
                 catalog: workspace
-                schema: olist_dev_marts
+                schema: olist_dev
           EOF
       - name: Install dbt packages
         run: dbt deps --project-dir .
