@@ -37,6 +37,9 @@ jobs:
           EOF
       - name: Install dbt packages
         run: dbt deps --project-dir .
-        
+      
+      - name: dbt seed
+        run: dbt seed --project-dir .
+
       - name: dbt build
-        run: dbt build --project-dir .
+        run: dbt build --project-dir . --exclude resource_type:seed
