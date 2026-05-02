@@ -35,6 +35,8 @@ jobs:
                 catalog: workspace
                 schema: olist_dev_marts
           EOF
-
+      - name: Install dbt packages
+        run: dbt deps --project-dir .
+        
       - name: dbt build
         run: dbt build --project-dir .
