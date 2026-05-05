@@ -38,7 +38,13 @@ jobs:
       - name: Install dbt packages
         run: dbt deps --project-dir .
       
+      - name: Check if seeds changed
+        id: seed_check
+        run: |
+          git diff --name-only HEAD~1 HEAD -- seeds/ | grep -q '.' && echo "seeds_changed=true" >> $GITHUB_OUTPUT || echo "seeds_changed=false" >> $GITHUB_OUTPUT
+
       - name: dbt seed
+        if: steps.seed_check.outputs.seeds_changed == 'true'
         run: dbt seed --project-dir .
 
       - name: dbt build
