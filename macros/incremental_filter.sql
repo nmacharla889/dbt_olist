@@ -1,14 +1,9 @@
-with max_date as (
-    {% if is_incremental() %}
-    select max(lead_original_date) as max_val from {{ this }}
-    {% else %}
-    select cast('1900-01-01' as date) as max_val
-    {% endif %}
-),
-
-qualified_leads as (
-    select * from {{ ref('stg_marketing__marketing_qualified_leads') }}
-    {% if is_incremental() %}
-    where lead_original_date > (select max_val from max_date)
-    {% endif %}
-),
+{% macro incremental_filter(column_name, days=3) %}
+  {% if is_incremental() %}
+    WHERE {{ column_name }} > (
+      SELECT max_val FROM (
+        SELECT MAX({{ column_name }}) AS max_val FROM {{ this }}
+      )
+    )
+  {% endif %}
+{% endmacro %}
