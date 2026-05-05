@@ -26,7 +26,7 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('dim_dates')
+              to: ref('dim_date')
               field: date_key
 
       - name: deal_close_date_key
@@ -37,15 +37,6 @@ models:
               to: ref('dim_date')
               field: date_key
         # intentionally not testing not_null since many leads won't convert to deals
-
-      - name: lead_date_key
-        data_type: int
-        description: "Foreign key to dim_dates based on lead date."
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_dates')
-              field: date_key
 
       - name: mql_id
         data_type: string
