@@ -41,6 +41,7 @@ final as (
         d.date_key as lead_original_date_key,
         ql.mql_id,
         ql.lead_source,
+        ql.lead_original_date,
         cd.sales_rep_id,
         cd.sales_manager_id,
         cd.business_segment,
