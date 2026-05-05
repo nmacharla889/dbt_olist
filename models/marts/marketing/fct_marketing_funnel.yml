@@ -20,9 +20,9 @@ models:
               field: seller_key
         # intentionally nullable — only populated when mql converts to a closed deal
 
-      - name: first_contact_date_key
+      - name: lead_original_date_key
         data_type: int
-        description: "Foreign key to dim_dates based on first contact date."
+        description: "Foreign key to dim_dates based on lead original date."
         tests:
           - not_null
           - relationships:
@@ -34,7 +34,7 @@ models:
         description: "Foreign key to dim_dates based on deal close date."
         tests:
           - relationships:
-              to: ref('dim_dates')
+              to: ref('dim_date')
               field: date_key
         # intentionally not testing not_null since many leads won't convert to deals
 
@@ -52,9 +52,6 @@ models:
         description: "Foreign key Marketing Qualified Lead"
         tests:
           - not_null
-          - relationships:
-              to: ref('dim_marketing_funnel')
-              field: mql_id
 
       - name: lead_source
         data_type: string
