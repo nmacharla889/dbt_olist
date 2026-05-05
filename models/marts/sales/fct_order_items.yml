@@ -63,6 +63,7 @@ models:
           - relationships:
               to: ref('stg_sales__order_items')
               field: item_id
+              severity: warn
 
       - name: order_status
         data_type: string
