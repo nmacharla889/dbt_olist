@@ -1,6 +1,6 @@
 # dbt-Olist
 
-End-to-end dbt pipeline built on Databricks using the Brazilian [Olist e-commerce dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce). Covers raw ingestion through mart layer across two business domains — sales and marketing — with incremental models, SCD Type 2 snapshots, singular tests, and a GitHub Actions CI pipeline running against Databricks.
+End-to-end dbt pipeline built on Databricks using the Brazilian [Olist e-commerce dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce). Covers raw ingestion through the mart layer across two business domains — sales and marketing — with incremental models, SCD Type 2 snapshots, singular tests, and a scheduled GitHub Actions build running against Databricks.
 
 ---
 
@@ -50,7 +50,7 @@ No intermediate layer for marketing — only two source tables with a single joi
 | dbt-databricks | Transformation layer |
 | Databricks | Compute + Delta Lake storage |
 | Delta Lake | Incremental materializations |
-| GitHub Actions | CI — automated dbt build on schedule |
+| GitHub Actions | Scheduled build — automated dbt build on schedule |
 | Python / venv | Local development |
 
 ---
@@ -127,9 +127,9 @@ dbt docs serve --profiles-dir .
 
 ## Key Decisions
 
-- **Geolocation CSV trimmed** — lat/long columns dropped, only zip code, city, and state retained. 2M+ rows with coordinates unused in any mart model — keeping them added size with no analytical value.
+- **Geolocation CSV trimmed** — lat/long columns dropped, only zip code, city, and state retained. 2M+ rows with coordinates unused in any mart model — keeping them adds size with no analytical value.
 - **Orphan products set to `severity: warn`** — 923 `product_id` values in `order_items` have no match in the products table. Genuine data quality issues in the source, not a pipeline bug. A hard failure would block CI on data we cannot fix.
-- **Three orders with no payment records** — present in the source data. Excluded from `fct_order_items` via inner join rather than surfacing nulls in the mart.
+- **Three orders with no payment records** — present in the source data. Excluded from `fct_order_items` via an inner join rather than surfacing nulls in the mart.
 - **Duplicate `review_id` values** — deduplicated in staging using `ROW_NUMBER()` partitioned by `review_id`, keeping the most recent record.
 - **`incremental_filter` macro in sales, inline CTE in marketing** — macro used in `fct_order_items` because the watermark logic is reusable across sales models. `fct_marketing_funnel` uses an inline CTE because `lead_original_date` is specific to that model — a macro would be over-engineering for one use case.
 - **No dim tables for marketing** — `fct_marketing_funnel` reuses `dim_date` from the sales domain. No new dims created because marketing doesn't own any new entities. `sales_rep_id` and `sales_manager_id` are deal attributes, not foreign keys to a rep dimension.
@@ -137,11 +137,11 @@ dbt docs serve --profiles-dir .
 
 ---
 
-## CI Pipeline
+## Scheduled Build
 
 GitHub Actions runs `dbt build` on a schedule against `olist_prod_*` schemas on Databricks.
 
-- Seeds only reload when the corresponding CSV file has changed (`git diff` check on the seeds directory)
+- Seeds are loaded manually (`git diff` check on the seeds directory)
 - Current status: `PASS=121 WARN=1 ERROR=0`
 - The single warning is the orphan `product_id` relationship test (intentional — see Key Decisions above)
 
@@ -152,4 +152,4 @@ GitHub Actions runs `dbt build` on a schedule against `olist_prod_*` schemas on 
 [Olist Brazilian E-Commerce](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) — 100k orders from 2016–2018 across Brazilian marketplaces. Two datasets:
 
 - **Sales:** orders, customers, products, sellers, payments, reviews, order items, geolocation
-- **Marketing:** marketing qualified leads (MQL) and closed deals — tracks the seller acquisition funnel from first contact to conversion
+- **Marketing:** marketing-qualified leads (MQL) and closed deals — tracks the seller acquisition funnel from first contact to conversion
