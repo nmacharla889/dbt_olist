@@ -27,8 +27,12 @@ models:
 
       - name: seller_city
         data_type: string
-        description: "The city where the seller is located."
+        description: "City from the geolocation table for the seller's zip code. 'unknown' when the zip code is not in the geolocation table."
+        tests:
+          - not_null
 
       - name: seller_state
         data_type: string
-        description: "The state where the seller is located."
+        description: "State from the geolocation table for the seller's zip code. 'unknown' when the zip code is not in the geolocation table."
+        tests:
+          - not_null

@@ -47,8 +47,8 @@ final as (
         {{ dbt_utils.generate_surrogate_key(['customer_unique_id']) }}  as customer_key,
         customer_unique_id,
         zip_code,
-        customer_city,
-        customer_state
+        coalesce(customer_city, 'unknown')  as customer_city,
+        coalesce(customer_state, 'unknown') as customer_state
     from latest_order
     where row_num = 1
 

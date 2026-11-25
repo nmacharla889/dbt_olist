@@ -21,9 +21,9 @@ final as (
     select
         {{ dbt_utils.generate_surrogate_key(['seller_id']) }} as seller_key,
         seller_id,
-        g.zip_code,
-        g.seller_city,
-        g.seller_state
+        s.zip_code,
+        coalesce(g.seller_city, 'unknown')  as seller_city,
+        coalesce(g.seller_state, 'unknown') as seller_state
     from sellers s
     left join geolocation g on s.zip_code = g.zip_code
 

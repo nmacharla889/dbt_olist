@@ -27,8 +27,12 @@ models:
 
       - name: customer_city
         data_type: string
-        description: "City associated with the customer's location"
+        description: "City from the geolocation table for the customer's zip code. 'unknown' when the zip code is not in the geolocation table."
+        tests:
+          - not_null
 
       - name: customer_state
         data_type: string
-        description: "State associated with the customer's location"
+        description: "State from the geolocation table for the customer's zip code. 'unknown' when the zip code is not in the geolocation table."
+        tests:
+          - not_null

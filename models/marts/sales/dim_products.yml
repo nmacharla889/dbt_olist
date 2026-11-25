@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: dim_products
-    description: "The table contains detailed information about products. Potential use cases include analyzing product characteristics, categorizing products by dimensions or weight, and understanding the impact of product aesthetics such as photo quantity. This data can support inventory management, sales analysis, and product development initiatives."
+    description: "One row per product (every product in the source, including products with no category or no English translation). Grain: product_id. Use product_category_name_english for reporting. Products with no category show as 'unknown'; categories with no translation fall back to the Portuguese name."
     columns:
       - name: product_key
         data_type: string
@@ -23,7 +23,15 @@ models:
 
       - name: product_category_name
         data_type: string
-        description: "The category to which the product belongs"
+        description: "Product category in Portuguese, as in the source. 'unknown' when the source has no category."
+        tests:
+          - not_null
+
+      - name: product_category_name_english
+        data_type: string
+        description: "Product category in English, from the translation table. Falls back to the Portuguese name when there is no translation, and to 'unknown' when there is no category."
+        tests:
+          - not_null
 
       - name: product_name_length
         data_type: bigint

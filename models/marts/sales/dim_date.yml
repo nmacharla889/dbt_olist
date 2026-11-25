@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: dim_date
-    description: "The table provides detailed information about dates, which can be useful for time-based analyses.  Possible use cases include scheduling, trend analysis over time, and generating reports that require date filters."
+    description: "One row per calendar day from 2016-01-01 to 2018-12-31 (the end date in the model is exclusive). Shared by both facts: fct_order_items uses it once (purchase date); fct_marketing_funnel uses it twice (lead date and deal close date)."
     columns:
       - name: date_day
         data_type: date
@@ -13,7 +13,10 @@ models:
 
       - name: date_key
         data_type: int
-        description: "Surrogate key for the date"
+        description: "Surrogate key for the date, in yyyyMMdd form (for example 20180131). Primary key; the facts join on this."
+        tests:
+          - not_null
+          - unique
 
       - name: year
         data_type: int
@@ -41,7 +44,7 @@ models:
 
       - name: day_of_week
         data_type: int
-        description: "The day of the week component of the date, where 1 represents Monday and 7 represents Sunday"
+        description: "Day of the week from Spark SQL dayofweek(): 1 = Sunday, 2 = Monday, ... 7 = Saturday"
 
       - name: day_name
         data_type: string
@@ -65,7 +68,7 @@ models:
 
       - name: is_weekend
         data_type: boolean
-        description: "Indicates whether the date falls on a weekend (true) or a weekday (false) "
+        description: "True for Saturday and Sunday, false otherwise"
 
       - name: year_month
         data_type: string
