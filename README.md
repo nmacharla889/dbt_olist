@@ -116,7 +116,7 @@ Prod schemas follow the same pattern with `olist_prod_*` prefix.
 - **Incremental strategy:** merge on `order_item_key`, filtered via `incremental_filter` macro using max watermark on `order_purchase_date`
 - **Foreign keys:** `product_key`, `seller_key`, `customer_key`, `order_purchase_date_key`
 - **Item-level measures:** `item_price_in_brl`, `item_freight_value_in_brl`, `total_item_value_in_brl`
-- **Order-level columns repeated on every item row:** `total_payment_value_in_brl`, `max_payment_installments`, `payment_method_count`, `paid_by_*`, `avg_review_score`. Never sum these across items. Revenue = price + freight; orders = distinct `order_id`.
+- **Order-level columns repeated on every item row:** `total_payment_value_in_brl`, `max_payment_installments`, `payment_method_count`, `paid_by_*`, `avg_review_score`. Never sum these across items. Revenue = `item_price_in_brl` (product sales, all order statuses); freight is reported separately, and price + freight is what customers paid for goods and shipping. Orders = distinct `order_id`.
 
 ### fct_orders
 - **Grain:** one row per order (`order_id`), all 99,441 orders, including the 775 orders with no items (mostly canceled or unavailable) that `fct_order_items` cannot see

@@ -1,0 +1,3 @@
+*.sql linguist-detectable=true
+*.m   linguist-detectable=false
+*.csx linguist-detectable=false
