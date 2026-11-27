@@ -21,6 +21,9 @@ clean-targets:
 
 vars:
   surrogate_key_treat_nulls_as_empty_string: true
+  # First and last day of the months where Olist order data is complete (used by dim_date.is_full_data_month)
+  full_data_start: '2017-01-01'
+  full_data_end: '2018-08-31'
 
 seeds:
   olist:

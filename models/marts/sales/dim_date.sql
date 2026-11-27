@@ -26,7 +26,13 @@ final as (
         weekofyear(date_day)                                as week_of_year,
         case when dayofweek(date_day) in (1, 7)
             then true else false end                        as is_weekend,
-        date_format(date_day, 'yyyy-MM')                    as year_month
+        date_format(date_day, 'yyyy-MM')                    as year_month,
+        cast(date_trunc('month', date_day) as date)         as month_start,
+        -- Olist order data is only complete from Jan 2017 to Aug 2018. Sep-Dec 2016 and Sep-Oct 2018
+        -- hold a handful of orders each, so trend charts filter on this flag to avoid fake spikes and drops.
+        case when date_day between cast('{{ var("full_data_start") }}' as date)
+                               and cast('{{ var("full_data_end") }}' as date)
+            then true else false end                        as is_full_data_month
     from date_spine
 )
 

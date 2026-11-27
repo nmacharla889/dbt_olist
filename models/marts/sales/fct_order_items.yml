@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: fct_order_items
-    description: "The table contains detailed information about order items in the system. This table can be used for analyzing sales performance, assessing delivery     efficiency, evaluating payment trends, and understanding customer feedback through review scores. Grain: one row per order line item (order_id + order_item_id).Contains all foreign keys to dimension tables and measurable facts (price, freight). Order-level attributes are intentionally excluded — join to source or an order-level aggregate if needed."
+    description: "Grain: one row per order line item (order_id + item_id). Holds the foreign keys to dim_products, dim_sellers, dim_customers and dim_date, plus item-level measures (item_price_in_brl, item_freight_value_in_brl, total_item_value_in_brl). Order-level columns (total_payment_value_in_brl, max_payment_installments, payment_method_count, paid_by_* flags, avg_review_score) are repeated on every item row of the same order. Never SUM them across items: that counts the order once per item. Use item_price_in_brl + item_freight_value_in_brl for revenue, and count distinct order_id for orders."
     columns:
       - name: order_item_key
         data_type: string
@@ -15,6 +15,7 @@ models:
         data_type: string
         description: "Foreign key to dim_products"
         tests:
+          - not_null
           - relationships:
               to: ref('dim_products')
               field: product_key
@@ -39,11 +40,11 @@ models:
 
       - name: order_purchase_date_key
         data_type: int
-        description: "Foreign key to dim_dates based on order_purchase_date"
+        description: "Foreign key to dim_date based on order_purchase_date"
         tests:
           - not_null
           - relationships:
-              to: ref('dim_dates')
+              to: ref('dim_date')
               field: date_key
 
       - name: order_id
@@ -97,7 +98,7 @@ models:
 
       - name: delivery_delay_days
         data_type: int
-        description: "The number of days by which the order was delivered after the estimated delivery date."
+        description: "Days between the estimated delivery date and the actual delivery to the customer (delivered minus estimated). Positive = late, zero or negative = on time or early. Null until the order is delivered."
 
       - name: item_price_in_brl
         data_type: double
@@ -119,17 +120,17 @@ models:
 
       - name: total_payment_value_in_brl
         data_type: double
-        description: "The total value of the payment in Brazilian Real (BRL)."
+        description: "Order-level: total payment for the whole order in BRL, repeated on every item row of that order. Do not SUM across items. 0 when the order has no payment record."
         tests:
           - not_null
 
       - name: max_payment_installments
         data_type: bigint
-        description: "The maximum number of installments allowed for the payment. This can be used to analyze payment preferences and trends among customers."
+        description: "Order-level (repeated on every item row of the order): the maximum number of payment installments used on the order."
 
       - name: payment_method_count
         data_type: bigint
-        description: "The number of different payment methods used for the order."
+        description: "Order-level (repeated on every item row of the order): the number of different payment methods used."
 
       - name: paid_by_credit_card
         data_type: int
@@ -149,4 +150,4 @@ models:
 
       - name: avg_review_score
         data_type: double
-        description: "Average review score for the item, calculated as the average of all review scores given by customers for this item. This can be used to analyze customer satisfaction and product quality."
+        description: "Order-level (repeated on every item row of the order): average review score for the whole order, not for the item. Averaging this column directly weights orders by their number of items; to average per order, take one value per order_id first."

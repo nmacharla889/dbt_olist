@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 2 * * *'
   workflow_dispatch:
+    inputs:
+      full_refresh:
+        description: 'Rebuild incremental models from scratch (needed once after staging or model logic changes)'
+        type: boolean
+        default: false
 
 jobs:
   dbt-build:
@@ -48,4 +53,4 @@ jobs:
         run: dbt seed --project-dir .
 
       - name: dbt build
-        run: dbt build --project-dir . --exclude resource_type:seed
+        run: dbt build --project-dir . --exclude resource_type:seed ${{ inputs.full_refresh && '--full-refresh' || '' }}

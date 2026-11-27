@@ -10,7 +10,7 @@ final as (
         mql_id,
         first_contact_date as lead_original_date,
         landing_page_id as lead_source_id,
-        origin as lead_source
+        coalesce(origin, 'unknown') as lead_source
     from source
 
 )

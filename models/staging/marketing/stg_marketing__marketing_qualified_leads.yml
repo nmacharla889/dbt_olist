@@ -25,4 +25,6 @@ models:
 
       - name: lead_source
         data_type: string
-        description: "Type of media where the lead was acquired (e.g., Facebook, Google, etc.)"
+        description: "Type of media where the lead was acquired (e.g., organic_search, paid_search). Nulls in the source are set to 'unknown' so the dashboard has no (Blank) bar."
+        tests:
+          - not_null

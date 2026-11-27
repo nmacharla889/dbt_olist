@@ -1,0 +1,149 @@
+// Olist Power BI measures, v3. All live in the _Measures table.
+// Easiest: run model_setup.csx in Tabular Editor 2, which creates or updates all of them.
+// By hand: _Measures table > New measure > paste 'Name = expression' > then set Format and Display folder
+// (Measure tools ribbon, and Properties pane > Display folder). 'Expect' values are the no-filter totals
+// after the dbt full refresh, checked against the seed CSVs.
+// Delete these old measures if you have them: Revenue PM, Revenue MoM %, Revenue YTD.
+
+// [Sales]  format: "R$"#,0
+// Item price, all order statuses, excludes freight. Expect R$13,591,644 with no filters.
+Revenue =
+SUM ( fct_order_items[item_price_in_brl] )
+
+// [Sales]  format: "R$"#,0
+// Freight charged on items. Expect R$2,251,910.
+Freight =
+SUM ( fct_order_items[item_freight_value_in_brl] )
+
+// [Sales]  format: #,0
+// One row per order item. Expect 112,650.
+Items Sold =
+COUNTROWS ( fct_order_items )
+
+// [Sales]  format: #,0
+// Orders with at least one item (98,666). Use Total Orders for every order including ones with no items.
+Orders =
+DISTINCTCOUNT ( fct_order_items[order_id] )
+
+// [Sales]  format: #,0
+// Distinct customers (customer_unique_id) who bought at least one item. Expect 95,420.
+Customers =
+DISTINCTCOUNT ( fct_order_items[customer_key] )
+
+// [Sales]  format: "R$"#,0.00
+// Revenue per order. Expect R$137.75.
+Avg Order Value =
+DIVIDE ( [Revenue], [Orders] )
+
+// [Sales]  format: 0.00
+// Average basket size. Expect 1.14.
+Items per Order =
+DIVIDE ( [Items Sold], [Orders] )
+
+// [Sales]  format: 0.0%
+// Freight as a share of item revenue. Expect 16.6%.
+Freight % of Revenue =
+DIVIDE ( [Freight], [Revenue] )
+
+// [Growth]  format: "R$"#,0
+// Revenue in months with complete data only (Jan 2017 to Aug 2018). Expect R$13,541,713 with no filters.
+Revenue Full Months =
+CALCULATE ( [Revenue], KEEPFILTERS ( dim_date[is_full_data_month] = TRUE () ) )
+
+// [Growth]  format: "R$"#,0
+// Revenue for the same dates one year earlier, only where both years have complete data. Blank when no single year is in context, and blank for 2017 (2016 is incomplete). For 2018 it returns Jan-Aug 2017: R$3,113,000.
+Revenue PY =
+VAR ShiftedDates =
+    CALCULATETABLE (
+        DATEADD ( dim_date[date_day], -1, YEAR ),
+        dim_date[is_full_data_month] = TRUE ()
+    )
+RETURN
+    IF (
+        HASONEVALUE ( dim_date[year] ),
+        CALCULATE ( [Revenue], ShiftedDates, dim_date[is_full_data_month] = TRUE () )
+    )
+
+// [Growth]  format: 0.0%
+// Like-for-like growth: complete months this year against the same months last year. For 2018: Jan-Aug 2018 vs Jan-Aug 2017 = +137.3%.
+Revenue YoY % =
+VAR PY = [Revenue PY]
+RETURN
+    IF ( NOT ISBLANK ( PY ), DIVIDE ( [Revenue Full Months] - PY, PY ) )
+
+// [Delivery]  format: #,0
+// Every order, any status, with or without items. Expect 99,441.
+Total Orders =
+COUNTROWS ( fct_orders )
+
+// [Delivery]  format: #,0
+// Orders with a customer delivery date. Expect 96,476.
+Delivered Orders =
+CALCULATE ( COUNTROWS ( fct_orders ), fct_orders[is_delivered] = TRUE () )
+
+// [Delivery]  format: #,0
+// Delivered on or before the promised date. is_on_time is blank for undelivered orders, so they can never count as on time. Expect 89,941.
+On Time Orders =
+CALCULATE ( COUNTROWS ( fct_orders ), fct_orders[is_on_time] = TRUE () )
+
+// [Delivery]  format: 0.0%
+// On-time share of delivered orders. Expect 93.2%.
+On Time % =
+DIVIDE ( [On Time Orders], [Delivered Orders] )
+
+// [Delivery]  format: 0.0%
+// Late share of delivered orders. Expect 6.8%.
+Late Orders % =
+DIVIDE ( [Delivered Orders] - [On Time Orders], [Delivered Orders] )
+
+// [Delivery]  format: 0.0
+// Delivered date minus promised date, averaged per order. Negative = early. Expect -11.9.
+Avg Delivery Delay Days =
+AVERAGE ( fct_orders[delivery_delay_days] )
+
+// [Delivery]  format: 0.00
+// Average review score, one value per order. Orders with no review are left out. Expect 4.09.
+Avg Review Score (per order) =
+AVERAGE ( fct_orders[review_score] )
+
+// [Delivery]  format: #,0
+// Orders with at least one review. Expect 98,673.
+Reviewed Orders =
+CALCULATE ( COUNTROWS ( fct_orders ), fct_orders[has_review] = TRUE () )
+
+// [Delivery]  format: 0.00%
+// Share of all orders with status canceled or unavailable. Expect 1.24% (1,234 of 99,441).
+Cancelled or Unavailable Orders % =
+DIVIDE (
+    CALCULATE ( COUNTROWS ( fct_orders ), fct_orders[is_canceled_or_unavailable] = TRUE () ),
+    [Total Orders]
+)
+
+// [Marketing]  format: #,0
+// Marketing qualified leads, dated by first contact. Expect 8,000.
+Leads =
+COUNTROWS ( fct_marketing_funnel )
+
+// [Marketing]  format: #,0
+// Leads that became a deal, dated by the lead's first contact. Expect 842.
+Closed Deals =
+CALCULATE ( COUNTROWS ( fct_marketing_funnel ), fct_marketing_funnel[is_deal_closed] = TRUE () )
+
+// [Marketing]  format: 0.0%
+// Conversion rate. Expect 10.5%.
+Lead to Deal % =
+DIVIDE ( [Closed Deals], [Leads] )
+
+// [Marketing]  format: 0.0
+// First contact to deal close, closed deals only. Expect 48.4.
+Avg Days to Close =
+AVERAGE ( fct_marketing_funnel[days_to_close_deal] )
+
+// [Marketing]  format: #,0
+// Closed deals counted in the month they closed. Uses TREATAS instead of an inactive relationship, so the 7,158 leads with no close date never add a (Blank) item to the date slicers. Expect 842 with no filters.
+Deals by Close Date =
+CALCULATE (
+    COUNTROWS ( fct_marketing_funnel ),
+    TREATAS ( VALUES ( dim_date[date_key] ), fct_marketing_funnel[deal_close_date_key] ),
+    REMOVEFILTERS ( dim_date )
+)

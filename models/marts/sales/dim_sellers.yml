@@ -27,8 +27,12 @@ models:
 
       - name: seller_city
         data_type: string
-        description: "The city where the seller is located."
+        description: "City from the seller record. 'unknown' only if the source is blank."
+        tests:
+          - not_null
 
       - name: seller_state
         data_type: string
-        description: "The state where the seller is located."
+        description: "Two-letter state from the seller record. 'unknown' only if the source is blank."
+        tests:
+          - not_null

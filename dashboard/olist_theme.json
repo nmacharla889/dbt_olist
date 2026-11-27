@@ -1,0 +1,15 @@
+{
+  "name": "Olist Clean",
+  "dataColors": ["#2F6DB5", "#E07B39", "#3A9D8F", "#8E6BBE", "#C9A227", "#C2455B", "#5B6770", "#7DB1D9"],
+  "background": "#FFFFFF",
+  "foreground": "#1F2933",
+  "tableAccent": "#2F6DB5",
+  "textClasses": {
+    "title": { "fontFace": "Segoe UI Semibold", "fontSize": 14, "color": "#1F2933" },
+    "label": { "fontFace": "Segoe UI", "fontSize": 10, "color": "#3E4C59" },
+    "callout": { "fontFace": "Segoe UI Semibold", "fontSize": 28, "color": "#1F2933" }
+  },
+  "visualStyles": {
+    "*": { "*": { "title": [{ "show": true, "fontSize": 12 }] } }
+  }
+}
