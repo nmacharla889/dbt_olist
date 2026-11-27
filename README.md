@@ -34,7 +34,7 @@ No intermediate layer for marketing — only two source tables with a single joi
 
 ## Star Schema
 
-Kimball-style dimensional model: two fact tables sharing conformed dimensions.
+Kimball-style dimensional model: three fact tables sharing conformed dimensions.
 
 ```mermaid
 erDiagram
@@ -73,7 +73,7 @@ erDiagram
 - **Dimensional modelling (Kimball)** — 3 facts and 4 dimensions with surrogate keys, conformed dimensions (`dim_sellers`, `dim_date`) and a role-playing date dimension (see Star Schema)
 - **Two business domains** — sales and marketing modelled separately with isolated schemas, shared dims (`dim_sellers`, `dim_date`) reused across domains
 - **Full funnel modelling** — `fct_marketing_funnel` includes unconverted leads with nulls on deal columns to preserve drop-off visibility
-- **Test coverage** — `not_null`, `unique`, `accepted_values`, relationship tests, and 6 singular tests
+- **Test coverage** — `not_null`, `unique`, `accepted_values`, relationship tests, `dbt_utils` row-count and uniqueness tests, and 7 singular tests
 - **GitHub Actions CI** — `dbt build` runs on schedule against Databricks prod (`olist_prod_*` schemas); seeds only reload when CSVs change via git diff check
 - **Schema separation** — dev and prod schemas fully isolated via `generate_schema_name` macro
 - **dbt_utils** — `dbt_utils.star()` used in mart models
@@ -88,6 +88,7 @@ erDiagram
 | Databricks | Compute + Delta Lake storage |
 | Delta Lake | Incremental materializations |
 | GitHub Actions | Scheduled build — automated dbt build on schedule |
+| Power BI | Dashboard on the prod marts (see Power BI Dashboard) |
 | Python / venv | Local development |
 
 ---
@@ -96,12 +97,13 @@ erDiagram
 
 | Schema | Contents |
 |---|---|
-| `olist_dev_raw` | Sales seeds (orders, customers, products, sellers, payments, reviews, order items) |
-| `olist_dev_mkt_raw` | Marketing seeds (MQL, closed deals) |
+| `olist_dev_sales_raw` | Sales seeds (orders, customers, products, sellers, payments, reviews, order items, geolocation, category translation) |
+| `olist_dev_marketing_raw` | Marketing seeds (MQL, closed deals) |
 | `olist_dev_stg` | Sales staging models |
 | `olist_dev_mkt_stg` | Marketing staging models |
-| `olist_dev_marts` | Sales intermediate + marts |
-| `olist_dev_mkt_marts` | Marketing marts |
+| `olist_dev_intermediate` | `int_orders_enriched` |
+| `olist_dev_marts` | Sales facts and dimensions |
+| `olist_dev_mkt_marts` | Marketing fact |
 
 Prod schemas follow the same pattern with `olist_prod_*` prefix.
 
@@ -172,6 +174,9 @@ dbt run --profiles-dir . --select fct_order_items
 # Run marketing domain only
 dbt build --profiles-dir . --select +fct_marketing_funnel
 
+# Load or reload the seed CSVs (needed once per environment)
+dbt seed --profiles-dir . --full-refresh
+
 # Generate docs
 dbt docs generate --profiles-dir .
 dbt docs serve --profiles-dir .
@@ -197,7 +202,7 @@ dbt docs serve --profiles-dir .
 
 ## Modelling Notes and Known Limits
 
-- **Order-level columns on an item-grain fact.** Payment and review columns repeat on every item row. Summing them overstates totals.
+- **Order-level columns on an item-grain fact.** Payment and review columns repeat on every item row of `fct_order_items`. Summing them overstates totals: use `fct_orders` for order-level values.
 - **Partial months at both ends.** Sep-Dec 2016 and Sep-Oct 2018 hold only a handful of orders. Monthly trend charts filter on `dim_date.is_full_data_month` so they don't show fake spikes and drops, and year-on-year growth compares Jan-Aug 2018 with Jan-Aug 2017.
 - **`dim_sellers` is current-state.** `snapshot_sellers` tracks changes, but no mart reads it, and the source has never changed, so there is no history yet.
 - **`dim_date` covers 2016-2018 only.** A date outside that range gets no `date_key`.
@@ -209,7 +214,7 @@ dbt docs serve --profiles-dir .
 
 GitHub Actions runs `dbt build` on a schedule against `olist_prod_*` schemas on Databricks.
 
-- Seeds are loaded manually (`git diff` check on the seeds directory)
+- Seeds reload only when the latest commit changes a CSV (`git diff` check on the seeds directory). Otherwise the prod raw tables stay as they are, so after loading seeds in stages, check the prod row counts (`dashboard/reconcile.sql` with `olist_prod_`) and run `dbt seed --full-refresh` against prod if they are short.
 - Run it manually with **full_refresh** ticked after any change to staging logic or an incremental model's columns (Actions > dbt build > Run workflow)
 
 ---
