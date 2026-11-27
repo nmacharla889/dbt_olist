@@ -27,12 +27,12 @@ models:
 
       - name: customer_city
         data_type: string
-        description: "City from the geolocation table for the customer's zip code. 'unknown' when the zip code is not in the geolocation table."
+        description: "City from the customer record (latest order). 'unknown' only if the source is blank."
         tests:
           - not_null
 
       - name: customer_state
         data_type: string
-        description: "State from the geolocation table for the customer's zip code. 'unknown' when the zip code is not in the geolocation table."
+        description: "Two-letter state from the customer record (latest order). 'unknown' only if the source is blank."
         tests:
           - not_null

@@ -6,23 +6,36 @@
   )
 }}
 
-with max_date as (
-    {% if is_incremental() %}
-    select max(lead_original_date) as max_val from {{ this }}
-    {% else %}
-    select cast('1900-01-01' as date) as max_val
-    {% endif %}
-),
+-- Grain: one row per marketing qualified lead (mql_id).
+-- Incremental runs pick up (a) new leads and (b) older leads whose deal closed after the last load,
+-- so a lead that converts later is updated in place instead of staying "not closed" forever.
 
-qualified_leads as (
-    select * from {{ ref('stg_marketing__marketing_qualified_leads') }}
+with watermark as (
     {% if is_incremental() %}
-    where lead_original_date > (select max_val from max_date)
+    select
+        max(lead_original_date)  as max_lead_date,
+        max(deal_close_date_key) as max_close_key
+    from {{ this }}
+    {% else %}
+    select cast('1900-01-01' as date) as max_lead_date, 0 as max_close_key
     {% endif %}
 ),
 
 closed_deals as (
     select * from {{ ref('stg_marketing__closed_deals') }}
+),
+
+qualified_leads as (
+    select * from {{ ref('stg_marketing__marketing_qualified_leads') }}
+    {% if is_incremental() %}
+    where lead_original_date > (select max_lead_date from watermark)
+       or mql_id in (
+            select mql_id
+            from closed_deals
+            where cast(date_format(deal_close_date, 'yyyyMMdd') as int)
+                  >= (select coalesce(max_close_key, 0) from watermark)
+       )
+    {% endif %}
 ),
 
 sellers as (
@@ -44,18 +57,20 @@ final as (
         ql.lead_original_date,
         cd.sales_rep_id,
         cd.sales_manager_id,
-        cd.business_segment,
-        cd.lead_type,
-        cd.lead_behaviour_profile,
+        -- Deal attributes only exist for closed deals. Closed deals with a blank value get 'unknown';
+        -- leads that never closed get 'not closed', so no chart ever shows a (Blank) bar.
+        case when cd.mql_id is null then 'not closed' else coalesce(cd.business_segment, 'unknown') end       as business_segment,
+        case when cd.mql_id is null then 'not closed' else coalesce(cd.lead_type, 'unknown') end              as lead_type,
+        case when cd.mql_id is null then 'not closed' else coalesce(cd.lead_behaviour_profile, 'unknown') end as lead_behaviour_profile,
         cd.has_company,
         cd.has_gtin,
         cd.average_stock,
-        cd.business_type,
+        case when cd.mql_id is null then 'not closed' else coalesce(cd.business_type, 'unknown') end          as business_type,
         cd.declared_product_catalog_size,
         cd.declared_monthly_revenue,
         case when cd.deal_close_date is not null then true else false end as is_deal_closed,
-        case when cd.deal_close_date is not null 
-            then datediff(cd.deal_close_date, ql.lead_original_date) 
+        case when cd.deal_close_date is not null
+            then datediff(cd.deal_close_date, ql.lead_original_date)
             else null end as days_to_close_deal
     from qualified_leads ql
     left join closed_deals cd on cd.mql_id = ql.mql_id

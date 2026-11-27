@@ -73,3 +73,15 @@ models:
       - name: year_month
         data_type: string
         description: "The year and month component of the date in the format 'YYYY-MM'"
+
+      - name: month_start
+        data_type: date
+        description: "First day of the month. Use it as the x-axis of monthly trend charts (continuous axis, sorts correctly)."
+        tests:
+          - not_null
+
+      - name: is_full_data_month
+        data_type: boolean
+        description: "True for Jan 2017 to Aug 2018, the months where Olist order data is complete (dates set by the full_data_start and full_data_end vars). Filter monthly trend charts on true so the near-empty months at both ends don't look like crashes."
+        tests:
+          - not_null

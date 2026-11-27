@@ -6,3 +6,6 @@ dbt_internal_packages/
 dbt-env/
 profiles.yml
 .user.yml
+.vscode/
+*Backup*.pbix
+dashboard/POWER_BI_STEPS.md

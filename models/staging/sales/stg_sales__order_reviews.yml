@@ -2,14 +2,18 @@ version: 2
 
 models:
   - name: stg_sales__order_reviews
-    description: "The table contains information related to customer reviews for orders. Possible use cases include analyzing customer satisfaction, identifying trends in product feedback, and assessing the effectiveness of response times to reviews."
+    description: "One row per review per order (review_id + order_id). The source repeats some review_id values across several orders (one review left for a multi-order purchase), so review_id alone is not unique. Deduplicating on review_id alone silently dropped the review for hundreds of orders."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - review_id
+            - order_id
     columns:
       - name: review_id
         data_type: string
-        description: "Primary key for the order review, uniquely identifying each review entry."
+        description: "Review identifier. Not unique on its own: the same review can cover several orders. Unique together with order_id."
         tests:
           - not_null
-          - unique
 
       - name: order_id
         data_type: string

@@ -11,7 +11,7 @@ renamed as (
         seller_id,
         sdr_id as sales_rep_id,
         sr_id as sales_manager_id,
-        date(convert_timezone('America/Sao_Paulo', 'UTC', won_date)) as deal_close_date,
+        to_date(won_date) as deal_close_date,
         business_segment,
         lead_type,
         lead_behaviour_profile,

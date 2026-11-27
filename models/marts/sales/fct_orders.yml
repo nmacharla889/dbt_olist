@@ -1,0 +1,127 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "Grain: one row per order (order_id), every order in the source including orders with no items. Use it for order counts, order status, cancellation rate, delivery performance and review score. Join keys: customer_key to dim_customers, order_purchase_date_key to dim_date. It has no product or seller key because an order can hold several products and sellers; use fct_order_items for those."
+    tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('stg_sales__orders')
+    columns:
+      - name: order_id
+        data_type: string
+        description: "Primary key. One row per order."
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_key
+        data_type: string
+        description: "Foreign key to dim_customers."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_key
+
+      - name: order_purchase_date_key
+        data_type: int
+        description: "Foreign key to dim_date (purchase date, yyyyMMdd)."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+      - name: order_status
+        data_type: string
+        description: "Order status from the source."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['delivered', 'shipped', 'canceled', 'unavailable', 'invoiced', 'processing', 'created', 'approved']
+
+      - name: order_purchase_date
+        data_type: date
+        description: "Purchase date (Brazil local time, as in the source)."
+        tests:
+          - not_null
+
+      - name: order_delivered_customer_date
+        data_type: date
+        description: "Date the customer received the order. Null when not delivered."
+
+      - name: order_estimated_delivery_date
+        data_type: date
+        description: "Delivery date promised to the customer at purchase."
+
+      - name: delivery_delay_days
+        data_type: int
+        description: "Delivered date minus estimated date. Negative = early, 0 = on the day, positive = late. Null when not delivered."
+
+      - name: item_count
+        data_type: bigint
+        description: "Number of items in the order. 0 for orders with no items."
+        tests:
+          - not_null
+
+      - name: seller_count
+        data_type: bigint
+        description: "Number of distinct sellers in the order."
+
+      - name: order_items_value_in_brl
+        data_type: decimal(12,2)
+        description: "Sum of item prices for the order (excludes freight). 0 when the order has no items."
+
+      - name: order_freight_value_in_brl
+        data_type: decimal(12,2)
+        description: "Sum of freight for the order."
+
+      - name: order_payment_value_in_brl
+        data_type: decimal(12,2)
+        description: "Total paid for the order across all payment methods. Safe to sum here (one row per order)."
+
+      - name: review_score
+        data_type: double
+        description: "Review score for the order (average when an order has more than one review). Null when there is no review."
+
+      - name: is_delivered
+        data_type: boolean
+        description: "True when the order has a customer delivery date."
+        tests:
+          - not_null
+
+      - name: is_on_time
+        data_type: boolean
+        description: "True when delivered on or before the estimated date. Null when not delivered, so undelivered orders never count as on time."
+
+      - name: delivery_status
+        data_type: string
+        description: "'On time', 'Late' or 'Not delivered'."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['On time', 'Late', 'Not delivered']
+
+      - name: delivery_delay_bucket
+        data_type: string
+        description: "Delay grouped into bands for charts. Sort it by delivery_delay_bucket_sort."
+        tests:
+          - not_null
+
+      - name: delivery_delay_bucket_sort
+        data_type: int
+        description: "Sort order for delivery_delay_bucket, earliest first."
+        tests:
+          - not_null
+
+      - name: is_canceled_or_unavailable
+        data_type: boolean
+        description: "True when order_status is canceled or unavailable."
+        tests:
+          - not_null
+
+      - name: has_review
+        data_type: boolean
+        description: "True when the order has at least one review."
+        tests:
+          - not_null

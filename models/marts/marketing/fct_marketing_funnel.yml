@@ -46,7 +46,9 @@ models:
 
       - name: lead_source
         data_type: string
-        description: "The source from which the lead was acquired."
+        description: "The source from which the lead was acquired. 'unknown' when the source is blank."
+        tests:
+          - not_null
 
       - name: sales_rep_id
         data_type: string
@@ -58,15 +60,21 @@ models:
 
       - name: business_segment
         data_type: string
-        description: "The business segment to which the lead belongs."
+        description: "The business segment of the seller. 'not closed' for leads that never became a deal, 'unknown' for closed deals with no value."
+        tests:
+          - not_null
 
       - name: lead_type
         data_type: string
-        description: "The type of the lead."
+        description: "The type of the lead. 'not closed' for leads that never became a deal, 'unknown' for closed deals with no value."
+        tests:
+          - not_null
 
       - name: lead_behaviour_profile
         data_type: string
-        description: "The behavioural profile of the lead."
+        description: "The behavioural profile of the lead. 'not closed' for leads that never became a deal, 'unknown' for closed deals with no value."
+        tests:
+          - not_null
 
       - name: has_company
         data_type: boolean
@@ -82,7 +90,9 @@ models:
 
       - name: business_type
         data_type: string
-        description: "The type of business for the lead."
+        description: "The type of business for the lead. 'not closed' for leads that never became a deal, 'unknown' for closed deals with no value."
+        tests:
+          - not_null
 
       - name: declared_product_catalog_size
         data_type: bigint
